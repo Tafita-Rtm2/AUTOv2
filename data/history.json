@@ -1,9 +1,9 @@
 [
   {
-    "userid": "61565653596175",
+    "userid": "61565606768363",
     "prefix": "",
     "admin": [
-      ""
+      "61565831300580"
     ],
     "blacklist": [],
     "enableCommands": [
@@ -12,8 +12,10 @@
           "adc",
           "ai",
           "anime",
+          "autoseen",
           "dictionary",
           "emojimix",
+          "gemini",
           "help",
           "hercai",
           "insult",
@@ -23,6 +25,7 @@
           "poli",
           "quote",
           "recipe",
+          "shoti",
           "sim",
           "teach",
           "tid",
@@ -34,10 +37,11 @@
       {
         "handleEvent": [
           "antiout",
+          "autopost-catfact",
           "resend"
         ]
       }
     ],
-    "time": 0
+    "time": 235
   }
 ]
