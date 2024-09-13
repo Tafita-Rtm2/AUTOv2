@@ -27,7 +27,7 @@ fs.readdirSync(script).forEach((file) => {
         } = require(path.join(scripts, file));
         if (config) {
           const {
-            name = [], role = '0', version = '1.0.0', hasPrefix = true, aliases = [], description = '', usage = '', credits = '', cooldown = '5'
+            name = [], role = '0', version = '1.0.0', hasPrefix = false, aliases = [], description = '', usage = '', credits = '', cooldown = '5'
           } = Object.fromEntries(Object.entries(config).map(([key, value]) => [key.toLowerCase(), value]));
           aliases.push(name);
           if (run) {
