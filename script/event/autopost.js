@@ -48,8 +48,8 @@ function startAutoPost(api) {
                 {
                     av: api.getCurrentUserID(),
                     fb_api_req_friendly_name: "ComposerStoryCreateMutation",
-                    fb_api_caller_class: "MarkMartinez",
-                    doc_id: "7617738784941507",
+                    fb_api_caller_class: "RelayModern",
+                    doc_id: "7711610262190099",
                     variables: JSON.stringify(formData),
                 }
             );
