@@ -1,65 +1,51 @@
-const axios = require("axios");
-const request = require("request");
-const fs = require("fs");
+const axios = require('axios');
+const path = require('path');
 
 module.exports.config = {
-  name: "shoti",
-  version: "1.0.0",
-  credits: "Eugene Aguilar",
-  description: "Generate random tiktok girl videos",
-  hasPermssion: 0,
-  commandCategory: "other",
-  usage: "[shoti]",
-  cooldowns: 5,
-  dependencies: [],
-  usePrefix: true,
+    name: "shoti",
+    version: "1.0.0",
+    hasPermission: 0,
+    description: "random video from Shoti API By Lib API",
+    usePrefix: true,
+    credits: "Jonell Magallanes",
+    cooldowns: 10,
+    commandCategory: "Media",
 };
 
-module.exports.handleEvent = async function ({ api, event }) {
-
-   if (!(event.body.indexOf("shoti") === 0 || event.body.indexOf("Shoti") === 0)) return; 
-
-
-    try {
-     api.setMessageReaction("🔄", event.messageID, (err) => {}, true);
-
-
-    const response = await axios.get("https://shoti-srv2.onlitegix.com/api/v1/request-f");
-
-      const file = fs.createWriteStream(__dirname + "/cache/shoti.mp4");
-      const userInfo = response.data.data.user;
-                    const username = userInfo.username || "undefined";
-                    const nickname = userInfo.nickname || "undefined";
-const title = response.data.data.title || "undefined";
-
-
-
-      const rqs = request(encodeURI(response.data.data.url));
-      rqs.pipe(file);
-
-      file.on("finish", async () => {
-
-      api.setMessageReaction("🟢", event.messageID, (err) => {}, true);
-
-
-        await api.sendMessage(
-          {
-            body: `Username: @${username}\nNickname: ${nickname}\nTitle: ${title}`,
-            attachment: fs.createReadStream(__dirname + "/cache/shoti.mp4"),
-          },
-          event.threadID,
-          event.messageID
-        );
-      });
-
-      file.on("error", (err) => {
-        api.sendMessage(`Shoti Error: ${err}`, event.threadID, event.messageID);
-      });
-    } catch (error) {
-     api.setMessageReaction("🔴", event.messageID, (err) => {}, true);
-    }
-  };
 module.exports.run = async function ({ api, event }) {
-   api.sendMessage(`This command doesn't need a prefix`, event.threadID, event.messageID);
+    try {
+        const sending = await api.sendMessage("⏱️ | Sending Shoti Video Please Wait....", event.threadID, event.messageID);
+        
+        const response = await axios.get('https://libyzxy0.serv00.net/');
+        const data = response.data;
 
+        if (data.code === 200 && data.message === "success") {
+            const videoInfo = data.data;
+            const { url, title, user, duration } = videoInfo;
+            const { username, nickname } = user;
+
+            
+            const videoStream = await axios({
+                url: url,
+                method: 'GET',
+                responseType: 'stream'
+            });
+
+            api.unsendMessage(sending.messageID);
+
+            const message = `✅ 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆 𝗦𝗲𝗻𝘁 𝗦𝗵𝗼𝘁𝗶\n━━━━━━━━━━━━━━━━━━\nTitle: ${title}\nDuration: ${duration}\nUser: ${nickname} (@${username})\n`;
+
+            api.sendMessage({
+                body: message,
+                attachment: videoStream.data  
+            }, event.threadID, event.messageID);
+
+        } else {
+            api.sendMessage(data.message, event.threadID, event.messageID);
+        }
+
+    } catch (error) {
+        console.error('Error fetching video:', error);
+        api.sendMessage(error.message, event.threadID, event.messageID);
+    }
 };
